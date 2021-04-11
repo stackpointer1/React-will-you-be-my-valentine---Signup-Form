@@ -1,115 +1,100 @@
-import React, { useState } from "react";
-import "./styles.css";
+import React, { Component, useState } from "react";
+import InputBox from "./inputBox";
 import SelectInput from "./selectGender";
-// import InputBox from './InputBox';
+import "../styles/App.css";
 
 const App = () => {
   const [fullName, setFullName] = useState({
     name: "",
     email: "",
-    gender: "",
+    gender: "Male",
     number: "",
-    password: ""
+    password: "",
   });
+
   const [inputError, setInputError] = useState({
     inputName: false,
     inputEmail: false,
     inputGender: false,
     inputNumber: false,
-    inputPassword: false
+    inputPass: false,
   });
   const [userName, setUserName] = useState("");
-  const inputChange = (event) => {
+
+  const inputChang = (event) => {
     console.log(event.target.value);
     console.log(event.target.name);
+
     const { value, name } = event.target;
-    setFullName((prevalue) => {
+
+    setFullName((prevalu) => {
       return {
-        ...prevalue,
-        [name]: value
+        ...prevalu,
+        [name]: value,
       };
     });
   };
   const buttonClick = () => {
+    // event.preventDefault();
     if (fullName.name === "") {
+      console.log("error");
+      setInputError((prevalue) => {
+        return { ...prevalue, inputName: true };
+      });
+    } else {
+      setInputError((prevalue) => {
+        return { ...prevalue, inputName: false };
+      });
+    }
+    if (!fullName.email.includes("@") || fullName.email === "") {
       console.log("error");
       setInputError((prevalue) => {
         return {
           ...prevalue,
-          inputName: true
+          inputEmail: true,
         };
       });
     } else {
       setInputError((prevalue) => {
         return {
           ...prevalue,
-          inputName: false
+          inputEmail: false,
         };
       });
-    }
-    if (fullName.email.includes("@") ==='true'|| fullName.email === "") {
-      console.log("errror");
-      setInputError((prevalue) => {
-        return {
-          ...prevalue,
-          inputEmail: true
-        };
-      });
-    } else {
-      setInputError((prevalue) => {
-        return {
-          ...prevalue,
-          inputEmail: false
-        };
-      });
-      let wish = fullName.email.split("@");
-      setUserName("Hello" + " " + wish[0]);
+      let sub = fullName.email.split("@");
+      setUserName("Hello" + " " + sub[0]);
     }
     if (fullName.gender === "") {
       console.log("error");
       setInputError((prevalue) => {
-        return {
-          ...prevalue,
-          inputGender: true
-        };
+        return { ...prevalue, inputGender: true };
       });
     } else {
       setInputError((prevalue) => {
-        return {
-          ...prevalue,
-          inputGender: false
-        };
+        return { ...prevalue, inputGender: false };
       });
     }
     if (fullName.number === "") {
       console.log("error");
       setInputError((prevalue) => {
-        return {
-          ...prevalue,
-          inputNumber: true
-        };
+        return { ...prevalue, inputNumber: true };
       });
     } else {
       setInputError((prevalue) => {
-        return {
-          ...prevalue,
-          inputNumber: false
-        };
+        return { ...prevalue, inputNumber: false };
       });
     }
     if (fullName.password.length < 6 || fullName.password === "") {
       console.log("error");
       setInputError((prevalue) => {
-        return { ...prevalue, inputPassword: true };
+        return { ...prevalue, inputPass: true };
       });
     } else {
       setInputError((prevalue) => {
-        return {
-          ...prevalue,
-          inputPassword: false
-        };
+        return { ...prevalue, inputPass: false };
       });
     }
+
   };
   return (
     <div id="main">
@@ -117,65 +102,64 @@ const App = () => {
       !inputError.inputEmail &&
       !inputError.inputGender &&
       !inputError.inputNumber &&
-      !inputError.inputp ? (
+      !inputError.inputPass ? (
         <h1>{userName}</h1>
       ) : (
         ""
       )}
-
-      <input
-        data="data-testid"
-        type="text"
-        placeholder="enter your name"
-        name="name"
-        onChange={inputChange}
-      />
-      {inputError.inputName ? <p>NameError</p> : ""}
-      <br />
-      <br />
-      <input
-        data="data-testid"
+      <InputBox
+        data="name"
         type="alphanumeric"
-        placeholder="enter your Email"
+        placeholder="Enter your Name"
+        defaultValue=""
+        name="name"
+        onChange={inputChang}
+        
+      />
+      {inputError.inputName ? <p>Name Error</p> : ""}
+      <InputBox
+        data="email"
+        type="email"
+        placeholder="Enter your Email"
         defaultValue=""
         name="email"
-        onChange={inputChange}
+        onChange={inputChang}
+        
       />
-      {inputError.inputEmail ? <p>Email must conatin @</p> : ""}
-      <br />
-      <br />
+      {inputError.inputEmail ? <p>Email must contain @</p> : ""}
 
-      <SelectInput data="gender" name="gender" onChange={inputChange} />
+      <SelectInput data="gender" name="gender" onChange={inputChang} />
       {inputError.inputGender ? <p>gender Error</p> : ""}
 
-
-      <input
-        data="data-testid"
+      <InputBox
+        data="phoneNumber"
         type="number"
-        placeholder="enter your phone Number"
+        placeholder="Enter your Phone Number"
         defaultValue=""
         name="number"
-        onChange={inputChange}
+        onChange={inputChang}
+        
       />
-      {inputError.inputNumber ? <p>NumberError</p> : ""}
-      <br />
-      <br />
-      <input
-        data="data-testid"
+      {inputError.inputNumber ? <p>Phone Number Error</p> : ""}
+      <InputBox
+        data="password"
         type="password"
-        placeholder="enter password"
-        defaultValue=" "
+        placeholder="Enter password"
+        defaultValue=""
         name="password"
-        onChange={inputChange}
+        onChange={inputChang}
+        // value={lname}
       />
-      {inputError.inputPassword ? <p>passwordError</p> : ""}
-      <br />
-      <br />
+      {inputError.inputPass ? (
+        <p> Password must contain atleast 6 letters</p>
+      ) : (
+        ""
+      )}
       <button data-testid="submit" onClick={buttonClick}>
         Submit
       </button>
     </div>
   );
 };
-export default App;
 
+export default App;
