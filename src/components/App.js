@@ -1,7 +1,7 @@
 import React, { Component, useState } from "react";
-import InputBox from "./inputBox";
-import SelectInput from "./selectGender";
-import "../styles/App.css";
+// import InputBox from "./inputBox";
+// import SelectInput from "./selectGender";
+import "./styles.css";
 
 const App = () => {
   const [fullName, setFullName] = useState({
@@ -9,7 +9,7 @@ const App = () => {
     email: "",
     gender: "Male",
     number: "",
-    password: "",
+    password: ""
   });
 
   const [inputError, setInputError] = useState({
@@ -17,25 +17,24 @@ const App = () => {
     inputEmail: false,
     inputGender: false,
     inputNumber: false,
-    inputPass: false,
+    inputPass: false
   });
   const [userName, setUserName] = useState("");
 
-  const inputChang = (event) => {
+  const inputChange = (event) => {
     console.log(event.target.value);
     console.log(event.target.name);
 
     const { value, name } = event.target;
 
-    setFullName((prevalu) => {
+    setFullName((prevalue) => {
       return {
-        ...prevalu,
-        [name]: value,
+        ...prevalue,
+        [name]: value
       };
     });
   };
   const buttonClick = () => {
-    // event.preventDefault();
     if (fullName.name === "") {
       console.log("error");
       setInputError((prevalue) => {
@@ -51,18 +50,18 @@ const App = () => {
       setInputError((prevalue) => {
         return {
           ...prevalue,
-          inputEmail: true,
+          inputEmail: true
         };
       });
     } else {
       setInputError((prevalue) => {
         return {
           ...prevalue,
-          inputEmail: false,
+          inputEmail: false
         };
       });
-      let sub = fullName.email.split("@");
-      setUserName("Hello" + " " + sub[0]);
+      let msg = fullName.email.split("@");
+      setUserName("Hello" + " " + msg[0]);
     }
     if (fullName.gender === "") {
       console.log("error");
@@ -94,7 +93,6 @@ const App = () => {
         return { ...prevalue, inputPass: false };
       });
     }
-
   };
   return (
     <div id="main">
@@ -107,47 +105,49 @@ const App = () => {
       ) : (
         ""
       )}
-      <InputBox
-        data="name"
+      <input
+        data-testid="name"
         type="alphanumeric"
         placeholder="Enter your Name"
         defaultValue=""
         name="name"
-        onChange={inputChang}
-        
+        onChange={inputChange}
       />
       {inputError.inputName ? <p>Name Error</p> : ""}
-      <InputBox
-        data="email"
+      <input
+        data-testid="email"
         type="email"
         placeholder="Enter your Email"
         defaultValue=""
         name="email"
-        onChange={inputChang}
-        
+        onChange={inputChange}
       />
       {inputError.inputEmail ? <p>Email must contain @</p> : ""}
 
-      <SelectInput data="gender" name="gender" onChange={inputChang} />
+      <select data-testid="gender" name="gender" onChange={inputChange}>
+        <option>Male</option>
+        <option>Female</option>
+        <option>others</option>
+      </select>
+
       {inputError.inputGender ? <p>gender Error</p> : ""}
 
-      <InputBox
+      <input
         data="phoneNumber"
         type="number"
         placeholder="Enter your Phone Number"
         defaultValue=""
         name="number"
-        onChange={inputChang}
-        
+        onChange={inputChange}
       />
       {inputError.inputNumber ? <p>Phone Number Error</p> : ""}
-      <InputBox
+      <input
         data="password"
         type="password"
         placeholder="Enter password"
         defaultValue=""
         name="password"
-        onChange={inputChang}
+        onChange={inputChange}
         // value={lname}
       />
       {inputError.inputPass ? (
