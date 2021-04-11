@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./styles.css";
+import SelectInput from "./selectGender";
 // import InputBox from './InputBox';
 
 const App = () => {
@@ -144,19 +145,9 @@ const App = () => {
       <br />
       <br />
 
-      <select
-        data="data-testid"
-        name="gender"
-        defaultValue="male"
-        onChange={inputChange}
-      >
-        <option>Male</option>
-        <option>Female</option>
-        <option>Other</option>
-      </select>
-      {inputError.inputGender ? <p>GenderError</p> : ""}
-      <br />
-      <br />
+      <SelectInput data="gender" name="gender" onChange={inputChange} />
+      {inputError.inputGender ? <p>gender Error</p> : ""}
+
 
       <input
         data="data-testid"
