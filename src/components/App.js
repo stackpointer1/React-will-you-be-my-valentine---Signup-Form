@@ -1,164 +1,103 @@
-import React, { Component, useState } from "react";
-// import InputBox from "./inputBox";
-// import SelectInput from "./selectGender";
-import "./styles.css";
+import React, {Component, useState} from "react";
+
+
 
 const App = () => {
-  const [fullName, setFullName] = useState({
-    name: "",
-    email: "",
-    gender: "Male",
-    number: "",
-    password: ""
-  });
+  const initialState={
+    nameMessage:'',
+    emailMessage:'',
+    phoneMessage:'',
+    passwordMessage:'',
+    error:'',
+    congrats:'',
+  }
+  const [data,setData]=useState(initialState)
+  const formValidation = (e) => {
+    e.preventDefault();
+    const Name = document.querySelector("input[data-testid=name]").value;
+    const email = document.querySelector("input[data-testid=email]").value;
+    const phone = document.querySelector("input[data-testid=phoneNumber]").value;
+    const password = document.querySelector("input[data-testid=password]").value;
 
-  const [inputError, setInputError] = useState({
-    inputName: false,
-    inputEmail: false,
-    inputGender: false,
-    inputNumber: false,
-    inputPass: false
-  });
-  const [userName, setUserName] = useState("");
-
-  const inputChange = (event) => {
-    console.log(event.target.value);
-    console.log(event.target.name);
-
-    const { value, name } = event.target;
-
-    setFullName((prevalue) => {
-      return {
-        ...prevalue,
-        [name]: value
-      };
-    });
-  };
-  const buttonClick = () => {
-    if (fullName.name === "") {
-      console.log("error");
-      setInputError((prevalue) => {
-        return { ...prevalue, inputName: true };
-      });
-    } else {
-      setInputError((prevalue) => {
-        return { ...prevalue, inputName: false };
-      });
+    if (Name === "" || phone === "" || password === "" || email === "") {
+      setData((prevState)=>({
+        ...initialState,
+        error:"All fields are mandatory"
+      }))
     }
-    if (!fullName.email.includes("@") || fullName.email === "") {
-      console.log("error");
-      setInputError((prevalue) => {
-        return {
-          ...prevalue,
-          inputEmail: true
-        };
-      });
+    else if (/[^0-9a-zA-Z]/.test(Name)) {
+      setData((prevState)=>({
+        ...initialState,
+        nameMessage:"Name is not alphanumeric"
+      }))
+    } else if (email.indexOf("@") === -1) {
+      setData((prevState)=>({
+        ...initialState,
+        emailMessage:"Email must contain @"
+      }))
+    } else if (isNaN(phone)) {
+      setData((prevState)=>({
+        ...initialState,
+        phoneMessage:"Phone Number must contain only numbers"
+      }))
+    } else if (password.length <= 6) {
+      setData((prevState)=>({
+        ...initialState,
+        passwordMessage:"Password must contain atleast 6 letters"
+      }))
     } else {
-      setInputError((prevalue) => {
-        return {
-          ...prevalue,
-          inputEmail: false
-        };
-      });
-      let msg = fullName.email.split("@");
-      setUserName("Hello" + " " + msg[0]);
-    }
-    if (fullName.gender === "") {
-      console.log("error");
-      setInputError((prevalue) => {
-        return { ...prevalue, inputGender: true };
-      });
-    } else {
-      setInputError((prevalue) => {
-        return { ...prevalue, inputGender: false };
-      });
-    }
-    if (fullName.number === "") {
-      console.log("error");
-      setInputError((prevalue) => {
-        return { ...prevalue, inputNumber: true };
-      });
-    } else {
-      setInputError((prevalue) => {
-        return { ...prevalue, inputNumber: false };
-      });
-    }
-    if (fullName.password.length < 6 || fullName.password === "") {
-      console.log("error");
-      setInputError((prevalue) => {
-        return { ...prevalue, inputPass: true };
-      });
-    } else {
-      setInputError((prevalue) => {
-        return { ...prevalue, inputPass: false };
-      });
+      let userName = email.slice(0, email.indexOf("@"));
+      setData((prevState)=>({
+        ...initialState,
+        congrats:`Hello ${userName}`
+      }))
     }
   };
   return (
-    <div id="main">
-      {!inputError.inputName &&
-      !inputError.inputEmail &&
-      !inputError.inputGender &&
-      !inputError.inputNumber &&
-      !inputError.inputPass ? (
-        <h1>{userName}</h1>
-      ) : (
-        ""
-      )}
-      <input
-        data-testid="name"
-        type="alphanumeric"
-        placeholder="Enter your Name"
-        defaultValue=""
-        name="name"
-        onChange={inputChange}
-      />
-      {inputError.inputName ? <p>Name Error</p> : ""}
-      <input
-        data-testid="email"
-        type="email"
-        placeholder="Enter your Email"
-        defaultValue=""
-        name="email"
-        onChange={inputChange}
-      />
-      {inputError.inputEmail ? <p>Email must contain @</p> : ""}
-
-      <select data-testid="gender" name="gender" onChange={inputChange}>
-        <option>Male</option>
-        <option>Female</option>
-        <option>others</option>
-      </select>
-
-      {inputError.inputGender ? <p>gender Error</p> : ""}
-
-      <input
-        data="phoneNumber"
-        type="number"
-        placeholder="Enter your Phone Number"
-        defaultValue=""
-        name="number"
-        onChange={inputChange}
-      />
-      {inputError.inputNumber ? <p>Phone Number Error</p> : ""}
-      <input
-        data="password"
-        type="password"
-        placeholder="Enter password"
-        defaultValue=""
-        name="password"
-        onChange={inputChange}
-        // value={lname}
-      />
-      {inputError.inputPass ? (
-        <p> Password must contain atleast 6 letters</p>
-      ) : (
-        ""
-      )}
-      <button data-testid="submit" onClick={buttonClick}>
-        Submit
-      </button>
-    </div>
+    <>
+      <form onSubmit={formValidation}>
+        <div>
+          Name :
+          <input type="text" data-testid="name" />
+          <div>{data.nameMessage}</div>
+        </div>
+        <br />
+        <div>
+          Email address :
+          <input type="text" data-testid="email" />
+          <div>{data.emailMessage}</div>
+        </div>
+        <br />
+        <div>
+          Gender :
+          <select data-testid="gender">
+            <option value="male" selected>
+              Male
+            </option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <br />
+        <div>
+          Phone Number :
+          <input type="text" data-testid="phoneNumber" />
+          <div>{data.phoneMessage}</div>
+        </div>
+        <br />
+        <div>
+          Password :
+          <input type="password" data-testid="password" />
+          <div>{data.passwordMessage}</div>
+        </div>
+        <br />
+        <div>
+          <input type="submit" data-testid="submit" />
+        </div>
+        <div>{data.error}</div>
+        <div>{data.congrats}</div>
+      </form>
+    </>
   );
 };
 
